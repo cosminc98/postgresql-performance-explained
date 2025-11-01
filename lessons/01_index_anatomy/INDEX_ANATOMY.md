@@ -1,12 +1,13 @@
+# The Anatomy of an Index
+
 ## Overview of Index Types
 
 * [Main source](https://www.postgresql.org/docs/current/indexes-types.html)
 
 
 ### B-Tree
-* The default index used
-* It works on most primitive data types
-* Can handle the  "<  <=  =  >=  >" operations
+* The default index used as it works on all primitive data types.
+* Can handle the  "<  <=  =  >=  >" operations.
 * Name is a bit misleading as it is not just a balanced tree, but a balanced tree with a double linked list at its base (more details later).
 
 
@@ -22,7 +23,7 @@
 
 * [A quick 8 minute introduction](https://www.youtube.com/watch?v=zw4-Hpm7ysk)
 * Is a framework for building indexes on complex data types: spatial coordinates (pictured on the left), trees, text (for searching, pictured on the right using signatures which hint if a word *might* be present but do not 100% guarantee it due to collisions), etc.
-* Some GiST indexes can be found [here](http://www.sai.msu.su/~megera/postgres/gist/)
+* Some GiST indexes can be found [here](http://www.sai.msu.su/~megera/postgres/gist/).
 
 ### SP-GiST (Space-Partitioned GiST)
 
@@ -43,3 +44,13 @@
     ```
   * **JSONB** -- The preferred way of indexing JSONB data.
 * The **inverted** part of the name of the index comes from the fact that the index stores multiple references to the same row of data (one for each component). This is in contrast to B-Tree indexes which only have one reference to each row. The idea is that you can search for each component separately and each will bring you back to the original row of data.
+
+### BRIN (Block Range INdexes)
+
+<center><img src="images/brin.png" width="800"/></center>
+
+* Read more [here](https://www.crunchydata.com/blog/postgres-indexing-when-does-brin-win).
+* Can handle the  "<  <=  =  >=  >" operations (just like B-Trees).
+* Are very lightweight (size on disk & write overhead).
+* Require a strong correlation between the order of the values of the column it indexes and the physical location on disk of the data (page number). Thus it is well suited for creation dates, timestamps, incremental identifiers, etc.
+* They are useful for very large tables with many insert operations per second.
