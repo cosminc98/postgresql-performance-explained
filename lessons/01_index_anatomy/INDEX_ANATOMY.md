@@ -30,3 +30,16 @@
 
 * SP-GiST supports partitioned search trees, which facilitate development of a wide range of different non-balanced data structures, such as quad-trees (pictured above), k-d trees, and radix trees (tries).
 * The common feature of these structures is that they repeatedly divide the search space into partitions that need not be of equal size. Searches that are well matched to the partitioning rule can be very fast.
+
+### GIN (Generalized Inverted iNdex)
+
+* Read more [here](https://pganalyze.com/blog/gin-index)
+* Used to index data types with multiple components. For example:
+  * **Text** -- A prerequisite is having to convert text in its components by using `to_tsvector`, which tokenizes (splits into words) and converts to lexemes (e.g. running -> run).
+    ```sql
+    SELECT to_tsvector('english', 'Running running run used to run home the ran for president');
+    -----------------------------------------------------
+    'home':7 'presid':11 'ran':9 'run':1,2,3,6 'use':4
+    ```
+  * **JSONB** -- The preferred way of indexing JSONB data.
+* The **inverted** part of the name of the index comes from the fact that the index stores multiple references to the same row of data (one for each component). This is in contrast to B-Tree indexes which only have one reference to each row. The idea is that you can search for each component separately and each will bring you back to the original row of data.
