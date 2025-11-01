@@ -1,11 +1,15 @@
 # The Anatomy of an Index
 
+Indexes are something we usually take for granted in a SQL database. It is the black magic that makes our queries go fast. We create one, see our query being faster than it was before and then give no more thought about the implications of what we just did, which can sometimes result in a query plan that could have been optimized further and does not scale with the size of the database. Also, as most things in life, indexes are not free. Keeping an index up to date results in write overhead, which in write-heavy workloads can be a bottleneck preventing you from either scaling your application up to meet more demand or reducing the costs of the database.
+
+The goal of this project is to help you understand how indexes function at a deeper level and how to make them work in your favor. This chapter in particular is a brief introduction to all PostgreSQL index types, with some of their main use cases. After this we will analyze B-Trees in more detail as they are the most commonly used index as they are quite versatily and can be applied on all primitive data types.
+
 ## Overview of Index Types
 
 * [Main source](https://www.postgresql.org/docs/current/indexes-types.html)
 
 
-### B-Tree
+### B-Tree (Balanced search Tree)
 * The default index used as it works on all primitive data types.
 * Can handle the  "<  <=  =  >=  >" operations.
 * Name is a bit misleading as it is not just a balanced tree, but a balanced tree with a double linked list at its base (more details later).
